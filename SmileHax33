@@ -1,0 +1,195 @@
+local DrRayLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/AZYsGithub/DrRay-UI-Library/main/DrRay.lua"))()
+
+local window = DrRayLibrary:Load("GUI", "Default")
+
+local tab1 = DrRayLibrary.newTab("Infectious smile", "rbxassetid://1129583422")
+
+tab1.newLabel("Human")
+tab1.newButton("Fast Bat", "Tap here", function()
+    game.Players.LocalPlayer.Character.Bat.Cooldown.Value = 0
+end)
+
+tab1.newButton("Fast Bottle", "Tap here", function()
+    game.Players.LocalPlayer.Character.Bottle.Cooldown.Value = 0
+end)
+
+tab1.newButton("Fast katana", "Tap here", function()
+    game.Players.LocalPlayer.Character.Katana.Cooldown.Value = 0
+end)
+
+tab1.newButton("Fast Branch", "Tap here", function()
+    game.Players.LocalPlayer.Character.Branch.Cooldown.Value = 0
+end)
+
+tab1.newButton("Reach", "Only work s Bottle and Branch", function()
+    local range = 9
+ 
+--// Variable \--
+local player = game:GetService("Players").LocalPlayer
+ 
+--// Script \--
+game:GetService("RunService").RenderStepped:Connect(function()
+    local p = game.Players:GetPlayers()
+    for i = 2, #p do local v = p[i].Character
+        if v and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and v:FindFirstChild("HumanoidRootPart") and player:DistanceFromCharacter(v.HumanoidRootPart.Position) <= range then
+            local tool = player.Character and player.Character:FindFirstChildOfClass("Tool")
+            if tool and tool:FindFirstChild("Handle") then
+                tool:Activate()
+                for i,v in next, v:GetChildren() do
+                    if v:IsA("BasePart") then
+                        firetouchinterest(tool.Handle,v,0)
+                        firetouchinterest(tool.Handle,v,1)
+                    end
+                end
+            end
+        end
+    end
+end)
+end)
+
+tab1.newButton("Mega Reach", "Only works Bottle and Branch", function()
+    local range = 25
+ 
+local player = game:GetService("Players").LocalPlayer
+ 
+game:GetService("RunService").RenderStepped:Connect(function()
+    local p = game.Players:GetPlayers()
+    for i = 2, #p do local v = p[i].Character
+        if v and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and v:FindFirstChild("HumanoidRootPart") and player:DistanceFromCharacter(v.HumanoidRootPart.Position) <= range then
+            local tool = player.Character and player.Character:FindFirstChildOfClass("Tool")
+            if tool and tool:FindFirstChild("Handle") then
+                tool:Activate()
+                for i,v in next, v:GetChildren() do
+                    if v:IsA("BasePart") then
+                        firetouchinterest(tool.Handle,v,0)
+                        firetouchinterest(tool.Handle,v,1)
+                    end
+                end
+            end
+        end
+    end
+end)
+end)
+
+tab1.newButton("Kill all", "Only works Bottle and Branch", function()
+    loadstring(game:HttpGet("https://pastebin.com/raw/g0kC5mjs"))()
+end)
+
+tab1.newButton("Input reach", "There is a chance that the game will crash", function()
+    loadstring(game:HttpGet("https://pastebin.com/raw/wyXt5xmu"))()
+end)
+
+tab1.newButton("Weapon giver (loop)", "Works at a distance", function()
+    game:GetService("CoreGui").PurchasePrompt.Enabled = false
+_G.Lag = true
+while _G.Lag do
+for i,v in pairs(workspace:GetDescendants()) do
+   if v:IsA("ClickDetector") then
+    fireclickdetector(v)
+   end
+end
+  wait(1)
+  end
+end)
+
+tab1.newButton("Anti infection", "Prints Hello!", function()
+    for _,v in pairs(game.workspace:GetDescendants()) do
+
+if string.find(v.Name,"Infector") then
+v:Destroy()
+end
+end
+end)
+
+tab1.newButton("AntiCheat destroy", "Prints Hello!", function()
+    workspace.Map.AntiHack:Destroy() game.Players.LocalPlayer.Character.AntiFly:Destroy()
+end)
+
+tab1.newLabel("Smile")
+
+tab1.newButton("Infect", "Tap here", function()
+    workspace.Map.Infectors.Infector.Part.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+workspace.Map.Infectors.Infector.Part.CanCollide = false
+game.Players.LocalPlayer.Character.Infected.InfectedSpeed.Value = 0
+end)
+
+tab1.newButton("Anti Yellow doors", "Tap here", function()
+    for _,v in pairs(game.workspace:GetDescendants()) do
+
+if string.find(v.Name,"AntiSmiler") then
+v:Destroy()
+end
+end
+end)
+
+tab1.newLabel("Events")
+
+tab1.newButton("Flashlight", "Visual", function()
+    loadstring(game:HttpGet("https://pastebin.com/raw/LSL8cSGb"))()
+end)
+
+tab1.newButton("Fullbright", "Tap here", function()
+    pcall(function()
+    local lighting = game:GetService("Lighting");
+    lighting.Ambient = Color3.fromRGB(255, 255, 255);
+    lighting.Brightness = 1;
+    lighting.FogEnd = 1e10;
+    for i, v in pairs(lighting:GetDescendants()) do
+        if v:IsA("BloomEffect") or v:IsA("BlurEffect") or v:IsA("ColorCorrectionEffect") or v:IsA("SunRaysEffect") then
+            v.Enabled = false;
+        end;
+    end;
+    lighting.Changed:Connect(function()
+        lighting.Ambient = Color3.fromRGB(255, 255, 255);
+        lighting.Brightness = 1;
+        lighting.FogEnd = 1e10;
+    end);
+    spawn(function()
+        local character = game:GetService("Players").LocalPlayer.Character;
+        while wait() do
+            repeat wait() until character ~= nil;
+            if not character.HumanoidRootPart:FindFirstChildWhichIsA("PointLight") then
+                local headlight = Instance.new("PointLight", character.HumanoidRootPart);
+                headlight.Brightness = 1;
+                headlight.Range = 60;
+            end;
+        end;
+    end);
+end)
+end)
+
+tab1.newButton("Darkness surrounds you", "Visual", function()
+    game.Lighting.FogStart = 4
+game.Lighting.FogEnd = 50
+game.Lighting.FogColor = Color3.new(0,0,0)
+end)
+
+tab1.newButton("Tin", ":)", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/markxd07/Luxury-Free/main/Auto_Kaitun.lua"))()
+end)
+
+tab1.newLabel("GUIS")
+
+tab1.newButton("Smile Hax", "Tap here", function()
+    loadstring(game:HttpGet("https://pastebin.com/raw/WG1BMS72",true))()
+end)
+
+tab1.newButton("Multi hub", "Tap here", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/jj123llol/multi-hub/main/Multi",true))()
+end)
+
+tab1.newButton("ROChips", "Tap here", function()
+    loadstring(game:HttpGet(('https://pastebin.com/raw/5NvnvrrS'),true))()
+end)
+
+tab1.newButton("GUI", "Tap here", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/MariyaFurmanova/Library/main/InfectiousSmile", true))()
+end)
+
+tab1.newButton("GUI", "Tap here", function()
+    loadstring(game:HttpGet("https://pastebin.com/raw/X8hLEwcz"))()
+end)
+
+tab1.newButton("GUI", "Tap here", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Nicuse/RobloxScripts/main/InfectiousSmile.lua", true))()
+end)
