@@ -75,8 +75,19 @@ tab1.newButton("Kill all", "Only works Bottle and Branch", function()
     loadstring(game:HttpGet("https://pastebin.com/raw/g0kC5mjs"))()
 end)
 
-tab1.newButton("Input reach", "There is a chance that the game will crash", function()
-    loadstring(game:HttpGet("https://pastebin.com/raw/wyXt5xmu"))()
+tab1.newInput("Input reach", "Reset to turn it off", function(text)
+    for i,v in pairs(game:GetService'Players'.LocalPlayer.Character:GetChildren()) do
+  if v:isA("Tool") then
+   local a = Instance.new("SelectionBox",v.Handle)
+   v.Handle.Massless = true
+   v.Handle.Transparency = 1
+   a.Adornee = v.Handle
+   v.Handle.Size = Vector3.new(text, text, text)
+   local selectionBox = Instance.new("SelectionBox",v.Handle)
+   selectionBox.Adornee = v.Handle
+   selectionBox.Color3 = Color3.new(0, 0.313725, 0.47451)
+  end
+ end
 end)
 
 tab1.newButton("Weapon giver (loop)", "Works at a distance", function()
