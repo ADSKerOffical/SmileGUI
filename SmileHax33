@@ -41,60 +41,6 @@ end
     end
 end)
 
-tab1.newButton("Reach", "Only work s Bottle and Branch", function()
-    local range = 9
- 
---// Variable \--
-local player = game:GetService("Players").LocalPlayer
- 
---// Script \--
-game:GetService("RunService").RenderStepped:Connect(function()
-    local p = game.Players:GetPlayers()
-    for i = 2, #p do local v = p[i].Character
-        if v and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and v:FindFirstChild("HumanoidRootPart") and player:DistanceFromCharacter(v.HumanoidRootPart.Position) <= range then
-            local tool = player.Character and player.Character:FindFirstChildOfClass("Tool")
-            if tool and tool:FindFirstChild("Handle") then
-                tool:Activate()
-                for i,v in next, v:GetChildren() do
-                    if v:IsA("BasePart") then
-                        firetouchinterest(tool.Handle,v,0)
-                        firetouchinterest(tool.Handle,v,1)
-                    end
-                end
-            end
-        end
-    end
-end)
-end)
-
-tab1.newButton("Mega Reach", "Only works Bottle and Branch", function()
-    local range = 25
- 
-local player = game:GetService("Players").LocalPlayer
- 
-game:GetService("RunService").RenderStepped:Connect(function()
-    local p = game.Players:GetPlayers()
-    for i = 2, #p do local v = p[i].Character
-        if v and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and v:FindFirstChild("HumanoidRootPart") and player:DistanceFromCharacter(v.HumanoidRootPart.Position) <= range then
-            local tool = player.Character and player.Character:FindFirstChildOfClass("Tool")
-            if tool and tool:FindFirstChild("Handle") then
-                tool:Activate()
-                for i,v in next, v:GetChildren() do
-                    if v:IsA("BasePart") then
-                        firetouchinterest(tool.Handle,v,0)
-                        firetouchinterest(tool.Handle,v,1)
-                    end
-                end
-            end
-        end
-    end
-end)
-end)
-
-tab1.newButton("Kill all", "Only works Bottle and Branch", function()
-    loadstring(game:HttpGet("https://pastebin.com/raw/g0kC5mjs"))()
-end)
-
 tab1.newInput("Input reach", "Reset to turn it off", function(text)
     for i,v in pairs(game:GetService'Players'.LocalPlayer.Character:GetChildren()) do
   if v:isA("Tool") then
@@ -110,9 +56,10 @@ tab1.newInput("Input reach", "Reset to turn it off", function(text)
  end
 end)
 
-tab1.newButton("Weapon giver (loop)", "Works at a distance", function()
-    game:GetService("CoreGui").PurchasePrompt.Enabled = false
-_G.Lag = true
+tab1.newToggle("Weapon giver", "Press this button to turn it on (works remotely)", true, function(toggleState)
+    if toggleState then
+        game:GetService("CoreGui").PurchasePrompt.Enabled = false
+_G.Lag = fasle
 while _G.Lag do
 for i,v in pairs(workspace:GetDescendants()) do
    if v:IsA("ClickDetector") then
@@ -121,6 +68,18 @@ for i,v in pairs(workspace:GetDescendants()) do
 end
   wait(1)
   end
+    else
+        game:GetService("CoreGui").PurchasePrompt.Enabled = false
+_G.Lag = true 
+while _G.Lag do
+for i,v in pairs(workspace:GetDescendants()) do
+   if v:IsA("ClickDetector") then
+    fireclickdetector(v)
+   end
+end
+  wait(1)
+  end
+    end
 end)
 
 tab1.newButton("Anti infection", "Prints Hello!", function()
