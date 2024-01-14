@@ -21,6 +21,26 @@ tab1.newButton("Fast Branch", "Tap here", function()
     game.Players.LocalPlayer.Character.Branch.Cooldown.Value = 0
 end)
 
+tab1.newToggle("Remove killbricks", "Removes all blocks that instantly kill you", true, function(toggleState)
+    if toggleState then
+        local player = game:GetService("Players").LocalPlayer
+while task.wait() do
+local parts = workspace:GetPartBoundsInRadius(player.Character:WaitForChild("HumanoidRootPart").Position, 10)
+for _, part in ipairs(parts) do
+part.CanTouch = true
+end
+end
+    else
+        local player = game:GetService("Players").LocalPlayer
+while task.wait() do
+local parts = workspace:GetPartBoundsInRadius(player.Character:WaitForChild("HumanoidRootPart").Position, 10)
+for _, part in ipairs(parts) do
+part.CanTouch = fasle
+end
+end
+    end
+end)
+
 tab1.newButton("Reach", "Only work s Bottle and Branch", function()
     local range = 9
  
