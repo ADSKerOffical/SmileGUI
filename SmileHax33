@@ -190,6 +190,30 @@ end
     end
 end)
 
+tab1.newButton("Get weapons", "Gives weapons", function()
+last_pick_sin_mrazy = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame 
+
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-18, 6, -14)
+task.wait()
+game:GetService("CoreGui").PurchasePrompt.Enabled = false
+for i,v in pairs(workspace:GetDescendants()) do
+   if v:IsA("ClickDetector") then
+    fireclickdetector(v)
+   end
+end
+task.wait()
+game. Players.LocalPlayer.Character.HumanoidRootPart.CFrame = last_pick_sin_mrazy
+end)
+
+tab1.newToggle("Anti inventory block", "Well, now you understand", true, function(toggleState)
+DS = toggleState
+while DS do
+task.wait()
+local StarterGui = game:GetService("StarterGui")
+StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
+end
+end)
+
 tab1.newButton("Anti infection", "You won't be able to get infected except the players", function()
     for _,v in pairs(game.workspace:GetDescendants()) do
 
@@ -220,7 +244,7 @@ end
 end
 end)
 
-tab1.newToggle("Auto infection", "Well, now you understand", fasle, function(toggleState)
+tab1.newToggle("Auto infection", "Well, now you understand", true, function(toggleState)
 hh = toggleState
 while hh do
     wait()
