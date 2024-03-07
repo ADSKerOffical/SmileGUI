@@ -5,20 +5,128 @@ local window = DrRayLibrary:Load("GUI", "Default")
 local tab1 = DrRayLibrary.newTab("Infectious smile", "rbxassetid://1129583422")
 
 tab1.newLabel("Human")
-tab1.newButton("Fast Bat", "Tap here", function()
-    game.Players.LocalPlayer.Character.Bat.Cooldown.Value = 0
-end)
 
-tab1.newButton("Fast Bottle", "Tap here", function()
-    game.Players.LocalPlayer.Character.Bottle.Cooldown.Value = 0
-end)
+tab1.newDropdown("Fast weapon", "Makes your equipment faster", {"Bat", "Bottle", "Katana", "Branch", "Spare", "Chain"}, function(selectedOption)
+    if selectedOption == "Bat" then
+local targetToolName = "Bat"
 
-tab1.newButton("Fast katana", "Tap here", function()
-    game.Players.LocalPlayer.Character.Katana.Cooldown.Value = 0
-end)
+local player = game.Players.LocalPlayer
+local function equipTool()
+    local backpack = player.Backpack
+    local character = player.Character
 
-tab1.newButton("Fast Branch", "Tap here", function()
-    game.Players.LocalPlayer.Character.Branch.Cooldown.Value = 0
+    local targetTool = backpack:FindFirstChild(targetToolName)
+    if targetTool then
+        targetTool.Parent = character
+    end
+end
+
+equipTool()
+
+wait(0.1)
+
+game.Players.LocalPlayer.Character.Bat.Cooldown.Value = 0
+end
+if selectedOption == "Bottle" then
+local targetToolName = "Bottle"
+
+local player = game.Players.LocalPlayer
+local function equipTool()
+    local backpack = player.Backpack
+    local character = player.Character
+
+    local targetTool = backpack:FindFirstChild(targetToolName)
+    if targetTool then
+        targetTool.Parent = character
+    end
+end
+
+equipTool()
+
+wait(0.1)
+
+game.Players.LocalPlayer.Character.Bottle.Cooldown.Value = 0
+end
+if selectedOption == "Katana" then
+local targetToolName = "Katana"
+
+local player = game.Players.LocalPlayer
+local function equipTool()
+    local backpack = player.Backpack
+    local character = player.Character
+
+    local targetTool = backpack:FindFirstChild(targetToolName)
+    if targetTool then
+        targetTool.Parent = character
+    end
+end
+
+equipTool()
+
+wait(0.1)
+
+game.Players.LocalPlayer.Character.Katana.Cooldown.Value = 0
+end
+if selectedOption == "Branch" then
+local targetToolName = "Branch"
+
+local player = game.Players.LocalPlayer
+local function equipTool()
+    local backpack = player.Backpack
+    local character = player.Character
+
+    local targetTool = backpack:FindFirstChild(targetToolName)
+    if targetTool then
+        targetTool.Parent = character
+    end
+end
+
+equipTool()
+
+wait(0.1)
+
+game.Players.LocalPlayer.Character.Branch.Cooldown.Value = 0
+end
+if selectedOption == "Spare" then
+local targetToolName = "Spare"
+
+local player = game.Players.LocalPlayer
+local function equipTool()
+    local backpack = player.Backpack
+    local character = player.Character
+
+    local targetTool = backpack:FindFirstChild(targetToolName)
+    if targetTool then
+        targetTool.Parent = character
+    end
+end
+
+equipTool()
+
+wait(0.1)
+
+game.Players.LocalPlayer.Character.Spare.Cooldown.Value = 0
+end
+if selectedOption == "Chain" then
+local targetToolName = "Chain"
+
+local player = game.Players.LocalPlayer
+local function equipTool()
+    local backpack = player.Backpack
+    local character = player.Character
+
+    local targetTool = backpack:FindFirstChild(targetToolName)
+    if targetTool then
+        targetTool.Parent = character
+    end
+end
+
+equipTool()
+
+wait(0.1)
+
+game.Players.LocalPlayer.Character.Chain.Cooldown.Value = 0
+end
 end)
 
 tab1.newToggle("Remove killbricks", "Removes all blocks that instantly kill you", true, function(toggleState)
@@ -82,7 +190,7 @@ end
     end
 end)
 
-tab1.newButton("Anti infection", "Prints Hello!", function()
+tab1.newButton("Anti infection", "You won't be able to get infected except the players", function()
     for _,v in pairs(game.workspace:GetDescendants()) do
 
 if string.find(v.Name,"Infector") then
@@ -91,19 +199,19 @@ end
 end
 end)
 
-tab1.newButton("AntiCheat destroy", "Prints Hello!", function()
+tab1.newButton("AntiCheat destroy", "Removes an anti-cheat that doesn't exist anyway", function()
     workspace.Map.AntiHack:Destroy() game.Players.LocalPlayer.Character.AntiFly:Destroy()
 end)
 
 tab1.newLabel("Smile")
 
-tab1.newButton("Infect", "Tap here", function()
+tab1.newButton("Infect", "Infects you", function()
     workspace.Map.Infectors.Infector.Part.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
 workspace.Map.Infectors.Infector.Part.CanCollide = false
 game.Players.LocalPlayer.Character.Infected.InfectedSpeed.Value = 0
 end)
 
-tab1.newButton("Anti Yellow doors", "Tap here", function()
+tab1.newButton("Anti Yellow doors", "Removes yellow doors", function()
     for _,v in pairs(game.workspace:GetDescendants()) do
 
 if string.find(v.Name,"AntiSmiler") then
@@ -112,11 +220,15 @@ end
 end
 end)
 
-tab1.newLabel("Events")
-
-tab1.newButton("Flashlight", "Visual", function()
-    loadstring(game:HttpGet("https://pastebin.com/raw/LSL8cSGb"))()
+tab1.newToggle("Auto infection", "Well, now you understand", fasle, function(toggleState)
+hh = toggleState
+while hh do
+    wait()
+   game:GetService("Players").LocalPlayer.Character.Infected.InfectEvent:FireServer()
+ end
 end)
+
+tab1.newLabel("Events")
 
 tab1.newButton("Fullbright", "Tap here", function()
     pcall(function()
@@ -148,14 +260,10 @@ tab1.newButton("Fullbright", "Tap here", function()
 end)
 end)
 
-tab1.newButton("Darkness surrounds you", "Visual", function()
-    game.Lighting.FogStart = 4
-game.Lighting.FogEnd = 50
+tab1.newButton("No fog", "Helps against the rich", function()
+    game.Lighting.FogStart = math.huge
+game.Lighting.FogEnd = math.huge
 game.Lighting.FogColor = Color3.new(0,0,0)
-end)
-
-tab1.newButton("Tin", ":)", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/markxd07/Luxury-Free/main/Auto_Kaitun.lua"))()
 end)
 
 tab1.newLabel("GUIS")
