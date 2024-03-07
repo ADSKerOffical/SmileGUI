@@ -205,6 +205,19 @@ task.wait()
 game. Players.LocalPlayer.Character.HumanoidRootPart.CFrame = last_pick_sin_mrazy
 end)
 
+tab1.newButton("Delete tool", "Removes tool in hand", function()
+local player = game.Players.LocalPlayer
+local function removeTool()
+    local character = player.Character
+    local tool = character:FindFirstChildOfClass("Tool")
+    if tool then
+        tool:Destroy()
+    end
+end
+
+removeTool()
+end)
+
 tab1.newToggle("Anti inventory block", "Well, now you understand", true, function(toggleState)
 DS = toggleState
 while DS do
@@ -250,6 +263,102 @@ while hh do
     wait()
    game:GetService("Players").LocalPlayer.Character.Infected.InfectEvent:FireServer()
  end
+end)
+
+tab1.newInput("Grab player", "There may be disturbances", function(text)
+last_pick_sin_mrazy = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame 
+   
+    PlayerName = text
+local function findPlayer(name)
+    for _, player in ipairs(game.Players:GetPlayers()) do
+        if player.Name:lower():match(name:lower()) or player.DisplayName:lower():match(name:lower()) then
+            return player
+        end
+    end
+    return nil
+end
+
+local function teleportToPlayer(targetPlayer)
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+    local targetCharacter = targetPlayer.Character or targetPlayer.CharacterAdded:Wait()
+    local targetHumanoidRootPart = targetCharacter:WaitForChild("HumanoidRootPart")
+
+    humanoidRootPart.CFrame = targetHumanoidRootPart.CFrame
+end
+
+local targetName = PlayerName
+local targetPlayer = findPlayer(targetName)
+
+if targetPlayer then
+
+local Services = setmetatable({}, {__index = function(Self, Index)
+local NewService = game.GetService(game, Index)
+if NewService then
+Self[Index] = NewService
+end
+return NewService
+end})
+
+local LocalPlayer = Services.Players.LocalPlayer
+
+local function PlayerAdded(Player)
+   local Detected = false
+   local Character;
+   local PrimaryPart;
+   local function CharacterAdded(NewCharacter)
+       Character = NewCharacter
+       repeat
+           wait()
+           PrimaryPart = NewCharacter:FindFirstChild("HumanoidRootPart")
+       until PrimaryPart
+       Detected = false
+   end
+
+   CharacterAdded(Player.Character or Player.CharacterAdded:Wait())
+   Player.CharacterAdded:Connect(CharacterAdded)
+   Services.RunService.Heartbeat:Connect(function()
+       if (Character and Character:IsDescendantOf(workspace)) and (PrimaryPart and PrimaryPart:IsDescendantOf(Character)) then
+           if PrimaryPart.AssemblyAngularVelocity.Magnitude > 0 or PrimaryPart.AssemblyLinearVelocity.Magnitude > 0 then
+               if Detected == false then
+             
+               end
+               Detected = true
+               for i,v in ipairs(Character:GetDescendants()) do
+                   if v:IsA("BasePart") then
+                       v.CanCollide = false
+                       v.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+                       v.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+                       v.CustomPhysicalProperties = PhysicalProperties.new(0, 0, 0)
+                   end
+               end
+               PrimaryPart.CanCollide = false
+               PrimaryPart.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+               PrimaryPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+               PrimaryPart.CustomPhysicalProperties = PhysicalProperties.new(0, 0, 0)
+           end
+       end
+   end)
+end
+
+for i,v in ipairs(Services.Players:GetPlayers()) do
+   if v ~= LocalPlayer then
+       PlayerAdded(v)
+   end
+end
+Services.Players.PlayerAdded:Connect(PlayerAdded)
+
+for i = 1, 50 do
+task.wait()
+    teleportToPlayer(targetPlayer)
+    game:GetService("Players").LocalPlayer.Character.Infected.InfectEvent:FireServer()
+    end
+    wait()
+    game. Players.LocalPlayer.Character.HumanoidRootPart.CFrame = last_pick_sin_mrazy
+else
+    print("I don't see a player with that name")
+end
 end)
 
 tab1.newLabel("Events")
