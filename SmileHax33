@@ -489,6 +489,27 @@ camera.CameraType = Enum.CameraType.Custom
 camera.CFrame = originalPosition
 end)
 
+tab1.newButton("Anti black hole", "You don't get distracted by explosions", function()
+    local plr = game.Players.LocalPlayer
+local char = plr.Character
+  for _, child in pairs(char:GetChildren()) do
+    if child:IsA("BasePart") then
+      child.Massless = false
+      child.CustomPhysicalProperties = PhysicalProperties.new(math.huge, math.huge, math.huge) 
+    end
+  end
+end)
+
+tab1.newButton("Kill all NPCs", "Kills NPC entities (if you damage them, their HP will be restored)", function()
+sethiddenproperty(game.Players.LocalPlayer, "SimulationRadius", 112412400000)
+sethiddenproperty(game.Players.LocalPlayer, "MaxSimulationRadius", 112412400000)
+for i, d in pairs(game.Workspace:GetDescendants()) do
+    if d.ClassName == 'Humanoid' and not game.Players:FindFirstChild(d.Parent.Name) then
+        d.Health = 0
+    end
+end
+end)
+
 tab1.newLabel("GUIS")
 
 tab1.newButton("Smile Hax", "Tap here", function()
