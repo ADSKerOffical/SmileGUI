@@ -150,6 +150,21 @@ end
 end)
 
 tab1.newInput("Input reach", "Reset to turn it off", function(text)
+
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local function equipTool(toolName)
+    local tool = player.Backpack:FindFirstChild(toolName)
+    if tool then
+        tool.Parent = character
+        wait()
+        tool.Parent = player.Character
+    end
+end
+
+equipTool("Bottle")
+equipTool("Branch")
+
     for i,v in pairs(game:GetService'Players'.LocalPlayer.Character:GetChildren()) do
   if v:isA("Tool") then
    local a = Instance.new("SelectionBox",v.Handle)
