@@ -361,9 +361,22 @@ else
 end
 end)
 
+tab1.newToggle("Auto collecting coins", "Collects everything SmileCoins", true, function(toggleState)
+local jjj = toggleState
+while jjj do
+wait(0.1)
+local plr = game.Players.LocalPlayer.Character.Head
+for i, v in pairs(game:GetService("Workspace"):GetDescendants()) do
+    if v.Name == "SmileCoin" and v:FindFirstChild("TouchInterest") then
+        firetouchinterest(plr, v, 0)
+    end
+  end
+end
+end)
+
 tab1.newLabel("Events")
 
-tab1.newButton("Fullbright", "Tap here", function()
+tab1.newButton("Fullbright", "You will see in the dark", function()
     pcall(function()
     local lighting = game:GetService("Lighting");
     lighting.Ambient = Color3.fromRGB(255, 255, 255);
@@ -397,6 +410,20 @@ tab1.newButton("No fog", "Helps against the rich", function()
     game.Lighting.FogStart = math.huge
 game.Lighting.FogEnd = math.huge
 game.Lighting.FogColor = Color3.new(0,0,0)
+end)
+
+tab1.newButton("Check Seismic Activity", "Checks how much time is left before disaster", function()
+local player = game.Players.LocalPlayer
+local camera = workspace.CurrentCamera
+local targetPosition = CFrame.new(-22, 6, -10)
+
+local originalPosition = camera.CFrame
+camera.CameraType = Enum.CameraType.Scriptable
+camera.CFrame = targetPosition
+
+wait(4)
+camera.CameraType = Enum.CameraType.Custom
+camera.CFrame = originalPosition
 end)
 
 tab1.newLabel("GUIS")
