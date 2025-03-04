@@ -203,12 +203,51 @@ end
     end
 end)
 
+tab1.newToggle("Push grab", "After releasing you push the player to the right like a cool one", false, function(tolog)
+ polhh = tolog
+    while polhh and task.wait() do
+for _, player in next, game.Players:GetPlayers() do
+ pcall(function()
+  if player ~= game.Players.LocalPlayer and player.Character and player.Character.HumanoidRootPart and isnetworkowner(player.Character.HumanoidRootPart) then
+    pcall(function()
+player.Character.Humanoid:ChangeState("PlatformStanding", true)
+player.Character.HumanoidRootPart.Velocity += game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.RightVector * 600
+ end)
+  end
+ end)
+end
+    end
+end)
+
+
+tab1.newToggle("Anti stun", "You cant be stunned", false, function(togli)
+ yhik = togli
+ while yhik and task.wait() do
+  pcall(function()
+   if game.Players.LocalPlayer.Character.Stats.Downed.Value == true or game.Players.LocalPlayer.Character.Stats.Ragdoll.Value == true then
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 20
+    game.Players.LocalPlayer.Character.Humanoid:SetStateEnabled("Jumping", true)
+    game.Players.LocalPlayer.Character.Stats.Downed.Value = false
+    game.Players.LocalPlayer.Character.Stats.Ragdoll.Value = false
+   end
+  end)
+ end
+end)
+
+tab1.newButton("Instant infect", "You can quickly infect players", function()
+ if game.Players.LocalPlayer.Character:FindFirstChild("Infected") then
+  game.Players.LocalPlayer.Character.Infected.Infect.Cooldown = 0
+ end
+end)
+
 tab1.newToggle("Auto collecting coins", "Collects everything SmileCoins", false, function(toggleState)
 jjj = toggleState
 while jjj and task.wait() do
  for i, v in pairs(Workspace.Map.System:GetDescendants()) do
      if v.Name == "SmileCoin" and v:FindFirstChild("TouchInterest") then
+pcall(function()
         firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v, 0)
+end)
      end
    end
  end
